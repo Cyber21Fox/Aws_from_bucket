@@ -15,12 +15,14 @@ list_res = []
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 
+
 def list_bucket():
     print('Список хранилищ:')
     for bucket in response['Buckets']:
         list_res.append(bucket["Name"])
         print(f'{list_res.index(bucket["Name"])} - {bucket["Name"]}')
     return list
+
 
 def choice_bucket():
     try:
@@ -30,6 +32,7 @@ def choice_bucket():
         return bucketName
     except:
         print("Такого хранилища не существует")
+
 
 def create_csv(obj):
     d = {}
@@ -43,9 +46,11 @@ def create_csv(obj):
             #print(df)
             #df.to_csv('log.csv', index=False)
 
+
 def flatten_dict(d: MutableMapping, sep: str= '.') -> MutableMapping:
     [flat_dict] = pd.json_normalize(d, sep=sep).to_dict(orient='records')
     return flat_dict
+
 
 def write_to_csv(dict):
     with open("log.csv", "w", newline="") as file:
@@ -61,6 +66,7 @@ def write_to_csv(dict):
     #   "x-forwarded-for": event["headers"]["x-forwarded-for"],"x-forwarded-port": event["headers"]["x-forwarded-port"],"x-forwarded-proto": event["headers"]["x-forwarded-proto"],
     #   "accountId": event["requestContext"]["accountId"],"queryStringParameters": event["queryStringParameters"]}
 
+
 def dowload_file(datebefore, dateafter):
     print("Загруженные файлы:")
     start_date = dt.datetime(int(datebefore[2]), int(datebefore[1]), int(datebefore[0]))
@@ -69,7 +75,7 @@ def dowload_file(datebefore, dateafter):
     for number in all_date:
         for obj in bucket.objects.filter(Prefix=f"year={number[6:]}/month={number[3:5]}/day={number[:2]}/"):
             print(obj.key)
-            #сделать проверку на пустоту
+            # сделать проверку на пустоту
             if not os.path.exists(os.path.dirname(obj.key)):
                 os.makedirs(os.path.dirname(obj.key))
             bucket.download_file(obj.key, obj.key)
